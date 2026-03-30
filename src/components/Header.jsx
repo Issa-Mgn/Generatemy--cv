@@ -14,7 +14,7 @@ const Header = () => {
             <span>GitHub</span>
           </a>
         </nav>
-      </div>
+      </div>  
     </header>
   );
 };

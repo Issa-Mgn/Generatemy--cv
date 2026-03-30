@@ -387,15 +387,26 @@ const CVPreview = ({ data, updateFormat }) => {
   const downloadPDF = async () => {
     setDownloading(true);
     const element = printRef.current;
+    
+    // On conserve le style original pour le restaurer après
+    const originalWidth = element.style.width;
+    
     try {
-      // Capture the element as an image using html2canvas
+      // Force la largeur à 794px (largeur A4 standard en px) pour garantir le layout "desktop"
+      // même sur mobile lors de la capture.
+      element.style.width = '794px';
+      
       const canvas = await html2canvas(element, { 
-        scale: 2, // higher resolution
-        useCORS: true
+        scale: 2, 
+        useCORS: true,
+        logging: false,
+        windowWidth: 794,
+        scrollX: 0,
+        scrollY: -window.scrollY
       });
+      
       const imgData = canvas.toDataURL('image/png');
       
-      // Calculate sizes: A4 is 210x297 mm
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
@@ -403,14 +414,23 @@ const CVPreview = ({ data, updateFormat }) => {
       });
 
       const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      const pdfHeight = pdf.internal.pageSize.getHeight();
       
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`CV_${data.personal.fullName.replace(/\s+/g, '_') || 'Genius'}.pdf`);
+      // On calcule la hauteur de l'image pour qu'elle garde ses proportions
+      const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+      
+      // On ajoute l'image au PDF en gardant les proportions calculées
+      // Si le CV dépasse une page A4, on pourrait ajouter d'autres pages,
+      // mais ici on garde une seule page pour le format standard du CV.
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, imgHeight);
+      
+      pdf.save(`CV_${data.personal.fullName?.replace(/\s+/g, '_') || 'Mon_CV'}.pdf`);
     } catch (error) {
       console.error('Erreur lors de la génération du PDF', error);
       alert("Une erreur est survenue lors de la création du PDF.");
     } finally {
+      // On restaure la largeur originale
+      element.style.width = originalWidth;
       setDownloading(false);
     }
   };
