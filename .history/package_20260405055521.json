@@ -1,8 +1,10 @@
 {
   "name": "generatemycv",
   "private": true,
+<<<<<<< HEAD
   "version": "1.0.1",
-"type": "module",
+=======
+type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

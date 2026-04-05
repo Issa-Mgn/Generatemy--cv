@@ -10,7 +10,7 @@ const Header = () => {
           <span>GenerateMy<span style={{ color: '#0F172A' }}>CV</span></span>
         </a>
         <nav>
-
+<<<<<<< HEAD
           <a href="https://github.com/Issa-Mgn/Generatemy--cv.git" target="_blank" rel="noreferrer" className="btn-outline">
             <span>Code Source :GitHub</span>
 </a>
