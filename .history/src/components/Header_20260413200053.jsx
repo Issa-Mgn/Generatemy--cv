@@ -1,0 +1,23 @@
+import React from 'react';
+import { FileText } from 'lucide-react';
+
+const Header = () => {
+  return (
+    <header className="header">
+      <div className="container">
+        <a href="/" className="logo">
+          <FileText size={28} color="#2563EB" />
+          <span>GenerateMy<span style={{ color: '#0F172A' }}>CV</span></span>
+        </a>
+        <nav className="btn-outline">
+
+          <a href="https://github.com/Issa-Mgn/Generatemy--cv.git" target="_blank" rel="noreferrer" >
+            <span>Code Source:</span> 
+            </a>GitHub
+        </nav>
+      </div>  
+    </header>
+  );
+};
+
+export default Header;
