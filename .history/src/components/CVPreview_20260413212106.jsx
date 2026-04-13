@@ -686,7 +686,6 @@ const Format10 = ({ data }) => {
     <div style={{ backgroundColor: '#F8FAFC', minHeight: '100%', fontFamily: 'Outfit, sans-serif' }}>
        {/* Top Design Header */}
        <div style={{ height: '240px', backgroundColor: '#0F172A', position: 'relative', display: 'flex', alignItems: 'flex-end', padding: '0 60px 40px 60px' }}>
-          <div style={{ position: 'absolute', top: 30, right: 60, color: 'rgba(255,255,255,0.1)', fontSize: '100px', fontWeight: '900', userSelect: 'none', pointerEvents: 'none' }}></div>
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '30px', zIndex: 1 }}>
              {personal.profileImage && (

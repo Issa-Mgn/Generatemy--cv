@@ -546,7 +546,7 @@ const Format8 = ({ data }) => {
       <div style={{ maxWidth: '800px', margin: '0 auto' }}>
         <header style={{ marginBottom: '60px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <div>
-            <h1 style={{ fontSize: '48px', fontWeight: '900', letterSpacing: '-1px', marginBottom: '10px' , color: '#F9FAFB' }}>{personal.fullName || 'Nom'}</h1>
+            <h1 style={{ fontSize: '48px', fontWeight: '900', letterSpacing: '-1px', marginBottom: '10px'  }}>{personal.fullName || 'Nom'}</h1>
             <h2 style={{ fontSize: '24px', color: '#60A5FA', fontWeight: '300' }}>{personal.jobTitle}</h2>
             <div style={{ display: 'flex', gap: '20px', marginTop: '20px', fontSize: '14px', color: '#9CA3AF' }}>
               <span>{personal.email}</span>
@@ -686,7 +686,7 @@ const Format10 = ({ data }) => {
     <div style={{ backgroundColor: '#F8FAFC', minHeight: '100%', fontFamily: 'Outfit, sans-serif' }}>
        {/* Top Design Header */}
        <div style={{ height: '240px', backgroundColor: '#0F172A', position: 'relative', display: 'flex', alignItems: 'flex-end', padding: '0 60px 40px 60px' }}>
-          <div style={{ position: 'absolute', top: 30, right: 60, color: 'rgba(255,255,255,0.1)', fontSize: '100px', fontWeight: '900', userSelect: 'none', pointerEvents: 'none' }}></div>
+          <div style={{ position: 'absolute', top: 30, right: 60, color: 'rgba(255,255,255,0.1)', fontSize: '100px', fontWeight: '900', userSelect: 'none', pointerEvents: 'none' }}>RESUME</div>
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '30px', zIndex: 1 }}>
              {personal.profileImage && (

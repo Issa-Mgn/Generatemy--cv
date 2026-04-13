@@ -12,7 +12,7 @@ const Header = () => {
         <nav className="nav">
 
           <a href="https://github.com/Issa-Mgn/Generatemy--cv.git" target="_blank" rel="noreferrer" className="btn-outline" >
-            <span>CS</span> : GitHub 
+            <span>Code :GitHub</span>  
             </a>
         </nav>
       </div>  
