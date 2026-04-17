@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { Download, LayoutTemplate } from 'lucide-react';
-import './CVPreview.css';
+import '../components/';
 
 // ==================== FORMAT 1: Left Dark Column ====================
 const Format1 = ({ data }) => {
