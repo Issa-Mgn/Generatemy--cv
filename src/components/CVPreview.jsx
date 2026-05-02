@@ -1,20 +1,48 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { Download, LayoutTemplate } from 'lucide-react';
 import './CVPreview.css';
 
+const FORMAT_OPTIONS = [
+  { value: 'format1', label: 'Moderne bleu' },
+  { value: 'format2', label: 'Minimaliste épuré' },
+  { value: 'format3', label: 'Exécutif bleu nuit' },
+  { value: 'format4', label: 'Contemporain split' },
+  { value: 'format5', label: 'Classique centré' },
+  { value: 'format6', label: 'Créatif moderne' },
+  { value: 'format7', label: 'Élégance sable' },
+  { value: 'format8', label: 'Minimaliste sombre' },
+  { value: 'format9', label: 'Corporate bordure' },
+  { value: 'format10', label: 'Luxe moderne' },
+];
+
+const getSkillsList = (skills = '') => skills.split(',').map(skill => skill.trim()).filter(Boolean);
+
+const getPdfFileName = (fullName) => {
+  const cleanedName = fullName?.trim().replace(/[^\p{L}\p{N}]+/gu, '_').replace(/^_+|_+$/g, '');
+  return `CV_${cleanedName || 'Mon_CV'}.pdf`;
+};
+
+const getExperienceTitle = (data, long = false) => {
+  if (data.profileType === 'student') {
+    return long ? 'Stages, projets et expériences' : 'Stages et projets';
+  }
+
+  return long ? 'Expérience professionnelle' : 'Expériences';
+};
+
 // ==================== FORMAT 1: Left Dark Column ====================
 const Format1 = ({ data }) => {
   const { personal, experience, education, skills } = data;
-  const skillsList = skills.split(',').map(s => s.trim()).filter(Boolean);
+  const skillsList = getSkillsList(skills);
 
   return (
     <div className="f1-root">
       <div className="f1-sidebar">
         {personal.profileImage && (
           <div className="f1-photo-wrap">
-            <img src={personal.profileImage} alt="Profile" className="f1-photo" />
+            <img src={personal.profileImage} alt="Portrait du candidat" className="f1-photo" />
           </div>
         )}
         <h1 className={`f1-name ${personal.profileImage ? 'text-center' : 'text-left'}`}>
@@ -48,7 +76,7 @@ const Format1 = ({ data }) => {
         )}
 
         <div className="f1-exp-box">
-          <h3 className="f1-exp-header">Expériences</h3>
+          <h3 className="f1-exp-header">{getExperienceTitle(data)}</h3>
           {experience.map(exp => (
             <div key={exp.id} className="f1-exp-item">
               <div className="f1-exp-top">
@@ -81,14 +109,14 @@ const Format1 = ({ data }) => {
 // ==================== FORMAT 2: Minimalist Clean ====================
 const Format2 = ({ data }) => {
   const { personal, experience, education, skills } = data;
-  const skillsList = skills.split(',').map(s => s.trim()).filter(Boolean);
+  const skillsList = getSkillsList(skills);
 
   return (
     <div className="f2-root">
       <div className="f2-header">
         {personal.profileImage && (
           <div className="f2-photo-wrap">
-            <img src={personal.profileImage} alt="Profile" className="f2-photo" />
+            <img src={personal.profileImage} alt="Portrait du candidat" className="f2-photo" />
           </div>
         )}
         <h1 className="f2-name">{personal.fullName || 'Votre Nom'}</h1>
@@ -107,7 +135,7 @@ const Format2 = ({ data }) => {
       <div className="f2-grid">
         <div className="f2-col-main">
           <div className="f2-section">
-            <h3 className="f2-section-title">Expérience</h3>
+            <h3 className="f2-section-title">{getExperienceTitle(data)}</h3>
             {experience.map(exp => (
               <div key={exp.id} className="f2-exp-item">
                 <div className="f2-exp-title">{exp.title}</div>
@@ -120,7 +148,7 @@ const Format2 = ({ data }) => {
             ))}
           </div>
 
-          <div className="f2-section" style={{ marginTop: '40px' }}>
+          <div className="f2-section f2-section-spaced">
             <h3 className="f2-section-title">Formation</h3>
             {education.map(edu => (
               <div key={edu.id} className="f2-edu-item">
@@ -152,13 +180,13 @@ const Format2 = ({ data }) => {
 // ==================== FORMAT 3: Executive Blue ====================
 const Format3 = ({ data }) => {
   const { personal, experience, education, skills } = data;
-  const skillsList = skills.split(',').map(s => s.trim()).filter(Boolean);
+  const skillsList = getSkillsList(skills);
 
   return (
     <div className="f3-root">
       <div className="f3-header">
         <div className="f3-header-inner">
-          {personal.profileImage && <img src={personal.profileImage} alt="Profile" className="f3-photo" />}
+          {personal.profileImage && <img src={personal.profileImage} alt="Portrait du candidat" className="f3-photo" />}
           <div>
             <h1 className="f3-name">{personal.fullName || 'Nom'}</h1>
             <h2 className="f3-title">{personal.jobTitle}</h2>
@@ -173,12 +201,12 @@ const Format3 = ({ data }) => {
 
       <div className="f3-content">
         {personal.summary && (
-          <div className="f3-summary">"{personal.summary}"</div>
+          <div className="f3-summary">{personal.summary}</div>
         )}
 
         <div className="f3-grid">
           <div>
-            <div style={{ marginBottom: '40px' }}>
+            <div className="f3-skills-section">
               <h3 className="f3-section-title">Compétences Clés</h3>
               <ul className="f3-skills-list">
                 {skillsList.map((skill, i) => <li key={i}>{skill}</li>)}
@@ -197,7 +225,7 @@ const Format3 = ({ data }) => {
           </div>
 
           <div>
-            <h3 className="f3-exp-header">Expérience Professionnelle</h3>
+            <h3 className="f3-exp-header">{getExperienceTitle(data, true)}</h3>
             {experience.map(exp => (
               <div key={exp.id} className="f3-exp-item">
                 <div className="f3-exp-title">{exp.title}</div>
@@ -217,7 +245,7 @@ const Format3 = ({ data }) => {
 // ==================== FORMAT 4: Contemporary Split ====================
 const Format4 = ({ data }) => {
   const { personal, experience, education, skills } = data;
-  const skillsList = skills.split(',').map(s => s.trim()).filter(Boolean);
+  const skillsList = getSkillsList(skills);
 
   return (
     <div className="f4-root">
@@ -225,7 +253,7 @@ const Format4 = ({ data }) => {
         <div className="f4-sidebar">
           {personal.profileImage ? (
             <div className="f4-photo-wrap">
-              <img src={personal.profileImage} alt="Profile" className="f4-photo" />
+              <img src={personal.profileImage} alt="Portrait du candidat" className="f4-photo" />
             </div>
           ) : (
             <div className="f4-initial-box">{personal.fullName?.[0] || 'C'}</div>
@@ -247,7 +275,7 @@ const Format4 = ({ data }) => {
           ))}
 
           <div className="f4-skills-wrap">
-            <h2 className="f4-section-title" style={{ borderBottom: 'none', marginTop: '40px' }}>Aptitudes</h2>
+            <h2 className="f4-section-title f4-section-title-plain">Aptitudes</h2>
             {skillsList.map((skill, i) => (
               <div key={i} className="f4-skill-tag">{skill}</div>
             ))}
@@ -264,7 +292,7 @@ const Format4 = ({ data }) => {
 
           <h2 className="f4-exp-header">
             <span className="f4-exp-header-line"></span>
-            Expérience Professionnelle
+            {getExperienceTitle(data, true)}
           </h2>
           {experience.map(exp => (
             <div key={exp.id} className="f4-exp-item">
@@ -283,14 +311,14 @@ const Format4 = ({ data }) => {
 // ==================== FORMAT 5: Classic Centered ====================
 const Format5 = ({ data }) => {
   const { personal, experience, education, skills } = data;
-  const skillsList = skills.split(',').map(s => s.trim()).filter(Boolean);
+  const skillsList = getSkillsList(skills);
 
   return (
     <div className="f5-root">
       <div className="f5-header">
         {personal.profileImage && (
           <div className="f5-photo-wrap">
-            <img src={personal.profileImage} alt="Profile" className="f5-photo" />
+            <img src={personal.profileImage} alt="Portrait du candidat" className="f5-photo" />
           </div>
         )}
         <h1 className="f5-name">{personal.fullName || 'Nom'}</h1>
@@ -305,7 +333,7 @@ const Format5 = ({ data }) => {
       </div>
 
       <div className="f5-section">
-        <h2 className="f5-section-title">Expérience</h2>
+        <h2 className="f5-section-title">{getExperienceTitle(data)}</h2>
         {experience.map(exp => (
           <div key={exp.id} className="f5-exp-item">
             <div className="f5-exp-top">
@@ -338,7 +366,7 @@ const Format5 = ({ data }) => {
 // ==================== FORMAT 6: Creative Modern ====================
 const Format6 = ({ data }) => {
   const { personal, experience, education, skills } = data;
-  const skillsList = skills.split(',').map(s => s.trim()).filter(Boolean);
+  const skillsList = getSkillsList(skills);
 
   return (
     <div className="f6-root">
@@ -348,7 +376,7 @@ const Format6 = ({ data }) => {
             <h1 className="f6-name">{personal.fullName || 'Votre Nom'}</h1>
             <p className="f6-title">{personal.jobTitle}</p>
           </div>
-          {personal.profileImage && <img src={personal.profileImage} alt="Profile" className="f6-photo" />}
+          {personal.profileImage && <img src={personal.profileImage} alt="Portrait du candidat" className="f6-photo" />}
         </div>
 
         <div className="f6-grid">
@@ -363,7 +391,7 @@ const Format6 = ({ data }) => {
             </div>
 
             <div>
-              <h3 className="f6-section-title">Skills</h3>
+              <h3 className="f6-section-title">Compétences</h3>
               <div className="f6-skills-wrap">
                 {skillsList.map((skill, i) => (
                   <span key={i} className="f6-skill-tag">{skill}</span>
@@ -389,7 +417,7 @@ const Format6 = ({ data }) => {
             </div>
 
             <div>
-              <h3 className="f6-exp-header">Expériences</h3>
+              <h3 className="f6-exp-header">{getExperienceTitle(data)}</h3>
               {experience.map(exp => (
                 <div key={exp.id} className="f6-exp-item">
                   <div className="f6-exp-top">
@@ -411,7 +439,7 @@ const Format6 = ({ data }) => {
 // ==================== FORMAT 7: Royal Elegance ====================
 const Format7 = ({ data }) => {
   const { personal, experience, education, skills } = data;
-  const skillsList = skills.split(',').map(s => s.trim()).filter(Boolean);
+  const skillsList = getSkillsList(skills);
 
   return (
     <div className="f7-root">
@@ -420,7 +448,7 @@ const Format7 = ({ data }) => {
         <h2 className="f7-title">{personal.jobTitle}</h2>
         
         <div className="f7-section">
-          <h3 className="f7-section-title">Expériences Professionnelles</h3>
+          <h3 className="f7-section-title">{getExperienceTitle(data, true)}</h3>
           {experience.map(exp => (
             <div key={exp.id} className="f7-exp-item">
               <div className="f7-exp-top">
@@ -445,7 +473,7 @@ const Format7 = ({ data }) => {
       </div>
 
       <div className="f7-sidebar">
-        {personal.profileImage && <img src={personal.profileImage} alt="Profile" className="f7-photo" />}
+        {personal.profileImage && <img src={personal.profileImage} alt="Portrait du candidat" className="f7-photo" />}
         
         <div className="f7-contact-box">
           <h3 className="f7-contact-title">Contact</h3>
@@ -479,7 +507,7 @@ const Format7 = ({ data }) => {
 // ==================== FORMAT 8: Minimalist Dark ====================
 const Format8 = ({ data }) => {
   const { personal, experience, education, skills } = data;
-  const skillsList = skills.split(',').map(s => s.trim()).filter(Boolean);
+  const skillsList = getSkillsList(skills);
 
   return (
     <div className="f8-root">
@@ -494,7 +522,7 @@ const Format8 = ({ data }) => {
               <span>{personal.location}</span>
             </div>
           </div>
-          {personal.profileImage && <img src={personal.profileImage} alt="Profile" className="f8-photo" />}
+          {personal.profileImage && <img src={personal.profileImage} alt="Portrait du candidat" className="f8-photo" />}
         </header>
 
         <section className="f8-summary">
@@ -503,7 +531,7 @@ const Format8 = ({ data }) => {
 
         <div className="f8-grid">
           <div>
-            <h3 className="f8-section-title">Work Experience</h3>
+            <h3 className="f8-section-title">{getExperienceTitle(data)}</h3>
             {experience.map(exp => (
               <div key={exp.id} className="f8-exp-item">
                 <div className="f8-exp-title">{exp.title}</div>
@@ -521,7 +549,7 @@ const Format8 = ({ data }) => {
               ))}
             </div>
 
-            <h3 className="f8-section-title">Education</h3>
+            <h3 className="f8-section-title">Formation</h3>
             {education.map(edu => (
               <div key={edu.id} className="f8-edu-item">
                 <div className="f8-edu-degree">{edu.degree}</div>
@@ -538,14 +566,14 @@ const Format8 = ({ data }) => {
 // ==================== FORMAT 9: Corporate Border ====================
 const Format9 = ({ data }) => {
   const { personal, experience, education, skills } = data;
-  const skillsList = skills.split(',').map(s => s.trim()).filter(Boolean);
+  const skillsList = getSkillsList(skills);
 
   return (
     <div className="f9-root">
       <div className="f9-card">
         <div className="f9-header">
           <div className="f9-header-inner">
-            {personal.profileImage && <img src={personal.profileImage} alt="Profile" className="f9-photo" />}
+            {personal.profileImage && <img src={personal.profileImage} alt="Portrait du candidat" className="f9-photo" />}
             <div>
               <h1 className="f9-name">{personal.fullName || 'Nom'}</h1>
               <h2 className="f9-title">{personal.jobTitle}</h2>
@@ -559,13 +587,13 @@ const Format9 = ({ data }) => {
         </div>
 
         <div className="f9-summary-box">
-          <h3 className="f9-section-title">Professional Summary</h3>
+          <h3 className="f9-section-title">Profil professionnel</h3>
           <p className="f9-summary">{personal.summary}</p>
         </div>
 
         <div className="f9-grid">
           <div className="f9-col-main">
-            <h3 className="f9-section-header">Experience</h3>
+            <h3 className="f9-section-header">{getExperienceTitle(data)}</h3>
             {experience.map(exp => (
               <div key={exp.id} className="f9-exp-item">
                 <div className="f9-exp-title">{exp.title}</div>
@@ -579,7 +607,7 @@ const Format9 = ({ data }) => {
           </div>
           <div className="f9-col-side">
             <div className="f9-skills-box">
-              <h3 className="f9-section-title">Top Skills</h3>
+              <h3 className="f9-section-title">Compétences clés</h3>
               <div className="f9-skills-list">
                 {skillsList.map((skill, i) => (
                   <div key={i} className="f9-skill-item">
@@ -590,7 +618,7 @@ const Format9 = ({ data }) => {
               </div>
             </div>
 
-            <h3 className="f9-edu-title">Education</h3>
+            <h3 className="f9-edu-title">Formation</h3>
             {education.map(edu => (
               <div key={edu.id} className="f9-edu-item">
                 <div className="f9-edu-degree">{edu.degree}</div>
@@ -608,14 +636,14 @@ const Format9 = ({ data }) => {
 // ==================== FORMAT 10: Modern Luxury ====================
 const Format10 = ({ data }) => {
   const { personal, experience, education, skills } = data;
-  const skillsList = skills.split(',').map(s => s.trim()).filter(Boolean);
+  const skillsList = getSkillsList(skills);
 
   return (
     <div className="f10-root">
       <div className="f10-header">
         <div className="f10-bg-text">CV</div>
         <div className="f10-header-inner">
-          {personal.profileImage && <img src={personal.profileImage} alt="Profile" className="f10-photo" />}
+          {personal.profileImage && <img src={personal.profileImage} alt="Portrait du candidat" className="f10-photo" />}
           <div>
             <h1 className="f10-name">{personal.fullName || 'Candidat'}</h1>
             <h2 className="f10-title">{personal.jobTitle}</h2>
@@ -662,7 +690,7 @@ const Format10 = ({ data }) => {
           </div>
 
           <div>
-            <h3 className="f10-exp-header">Expériences</h3>
+            <h3 className="f10-exp-header">{getExperienceTitle(data)}</h3>
             {experience.map(exp => (
               <div key={exp.id} className="f10-exp-item">
                 <div className="f10-exp-top">
@@ -680,35 +708,64 @@ const Format10 = ({ data }) => {
   );
 };
 
+const FORMAT_COMPONENTS = {
+  format1: Format1,
+  format2: Format2,
+  format3: Format3,
+  format4: Format4,
+  format5: Format5,
+  format6: Format6,
+  format7: Format7,
+  format8: Format8,
+  format9: Format9,
+  format10: Format10,
+};
+
 // ==================== MAIN COMPONENT ====================
 const CVPreview = ({ data, updateFormat }) => {
   const printRef = useRef(null);
   const [downloading, setDownloading] = useState(false);
 
   const downloadPDF = async () => {
-    setDownloading(true);
     const element = printRef.current;
+    if (!element) return;
+
+    setDownloading(true);
     const originalWidth = element.style.width;
 
     try {
       element.style.width = '794px';
-      const canvas = await html2canvas(element, { 
-        scale: 2, 
+      const canvas = await html2canvas(element, {
+        scale: 2,
         useCORS: true,
         logging: false,
         windowWidth: 794,
         scrollX: 0,
-        scrollY: -window.scrollY
+        scrollY: -window.scrollY,
       });
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
       const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
       const imgHeight = (canvas.height * pdfWidth) / canvas.width;
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, imgHeight);
-      pdf.save(`CV_${data.personal.fullName?.replace(/\s+/g, '_') || 'Mon_CV'}.pdf`);
+      const pageOverflowTolerance = 2;
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+      heightLeft -= pdfHeight;
+
+      while (heightLeft > pageOverflowTolerance) {
+        position -= pdfHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+        heightLeft -= pdfHeight;
+      }
+
+      pdf.save(getPdfFileName(data.personal.fullName));
     } catch (error) {
       console.error('Erreur PDF', error);
-      alert("Erreur lors de la génération du PDF.");
+      alert('Erreur lors de la génération du PDF.');
     } finally {
       element.style.width = originalWidth;
       setDownloading(false);
@@ -716,41 +773,31 @@ const CVPreview = ({ data, updateFormat }) => {
   };
 
   const renderFormat = () => {
-    switch(data.format) {
-      case 'format1': return <Format1 data={data} />;
-      case 'format2': return <Format2 data={data} />;
-      case 'format3': return <Format3 data={data} />;
-      case 'format4': return <Format4 data={data} />;
-      case 'format5': return <Format5 data={data} />;
-      case 'format6': return <Format6 data={data} />;
-      case 'format7': return <Format7 data={data} />;
-      case 'format8': return <Format8 data={data} />;
-      case 'format9': return <Format9 data={data} />;
-      case 'format10': return <Format10 data={data} />;
-      default: return <Format1 data={data} />;
-    }
+    const SelectedFormat = FORMAT_COMPONENTS[data.format] ?? Format1;
+    return <SelectedFormat data={data} />;
   };
 
   return (
     <div className="cv-preview-root">
       <div className="cv-controls-bar">
         <div className="cv-controls-left">
-          <LayoutTemplate size={20} color="#64748B" />
-          <select value={data.format} onChange={(e) => updateFormat(e.target.value)} className="cv-format-select">
-            <option value="format1">Format 1: Moderne (Bleu & Blanc)</option>
-            <option value="format2">Format 2: Minimaliste Épuré</option>
-            <option value="format3">Format 3: Exécutif (Bleu Nuit)</option>
-            <option value="format4">Format 4: Contemporain (Split)</option>
-            <option value="format5">Format 5: Élégant Centré</option>
-            <option value="format6">Format 6: Créatif (Dégradé)</option>
-            <option value="format7">Format 7: Royal (Sable & Or)</option>
-            <option value="format8">Format 8: Minimaliste Sombre</option>
-            <option value="format9">Format 9: Bordure Corporative</option>
-            <option value="format10">Format 10: Luxe Moderne (Éthéré)</option>
+          <LayoutTemplate size={20} aria-hidden="true" />
+          <label className="sr-only" htmlFor="cv-format">Modèle de CV</label>
+          <select
+            id="cv-format"
+            value={data.format}
+            onChange={(event) => updateFormat(event.target.value)}
+            className="cv-format-select"
+          >
+            {FORMAT_OPTIONS.map((format) => (
+              <option key={format.value} value={format.value}>
+                {format.label}
+              </option>
+            ))}
           </select>
         </div>
-        <button className="cv-download-btn" onClick={downloadPDF} disabled={downloading}>
-          <Download size={18} />
+        <button type="button" className="cv-download-btn" onClick={downloadPDF} disabled={downloading}>
+          <Download size={18} aria-hidden="true" />
           {downloading ? 'Génération...' : 'Télécharger PDF'}
         </button>
       </div>

@@ -1,64 +1,44 @@
-#  GenerateMyCV
+# GenerateMyCV
 
-Bienvenue sur **GenerateMyCV** ! Il s'agit d'une application web rapide et intuitive permettant de générer des Curriculum Vitae (CV) professionnels en quelques clics. Construit avec **React** et **Vite**, le projet offre un rendu en temps réel et l'exportation directe en PDF.
+GenerateMyCV est une application React qui permet de créer un CV, de le prévisualiser en direct et de l'exporter en PDF depuis le navigateur.
 
----
+## Fonctionnalités
 
-##  Fonctionnalités Principales
+- Formulaire dynamique pour les informations personnelles, expériences, formations et compétences.
+- Aperçu immédiat du CV pendant la saisie.
+- 10 modèles visuels sélectionnables.
+- Sauvegarde locale automatique dans le navigateur.
+- Export PDF côté client avec `html2canvas` et `jspdf`.
 
-- **Édition Intuitive :** Remplissez vos informations (Profil, Expériences, Formations, Compétences) via un formulaire dynamique et simple d'utilisation.
-- **Aperçu en Temps Réel :** Visualisez instantanément les modifications apportées à votre CV.
+## Stack
 
-- **Multitude de Templates :** Choisissez parmi 10 designs professionnels (Moderne, Minimaliste, Exécutif, Créatif, Royal, Sombre, Luxe Moderne, etc.).
+- React
+- Vite
+- lucide-react
+- html2canvas
+- jsPDF
+- CSS classique
 
-- **Exportation en PDF :** Téléchargement en haute qualité de votre CV prêt à l'emploi grâce à `html2canvas` et `jspdf`.
-- **Interface Moderne :** Une interface utilisateur propre et réactive, améliorée avec de superbes icônes.
+## Lancement
 
-##  Technologies Utilisées
-
-Ce projet repose sur une stack moderne pour garantir rapidité et fluidité :
-
-- **[React 19](https://react.dev/)** - Bibliothèque UI principale.
-- **[Vite.js](https://vitejs.dev/)** - Outil de build ultra-rapide et serveur de développement.
-- **[jsPDF](https://github.com/parallax/jsPDF) & [html2canvas](https://html2canvas.hertzen.com/)** - Moteurs de rendu et génération PDF côté client.
-- **CSS3** - Pour le design complet et la gestion de la mise en page (Flexbox/Grid).
-
-## Installation et Lancement
-
-Pour cloner et exécuter cette application localement, assurez-vous d'avoir [Node.js](https://nodejs.org/) installé sur votre machine.
-
-### 1. Cloner le répertoire
-```bash
-git clone https://github.com/Issa-Mgn/generatemycv.git
-cd generatemycv
-```
-
-### 2. Installer les dépendances
 ```bash
 npm install
-```
-
-### 3. Lancer le serveur de développement local
-```bash
 npm run dev
 ```
 
-### 4. Ouvrir dans le navigateur
-Accédez à [http://localhost:5173](http://localhost:5173) pour utiliser l'application localement.
+L'application est disponible par défaut sur `http://localhost:5173`.
 
-## Build et Production
-
-Pour construire l'application et la préparer au déploiement pour la production :
+## Scripts
 
 ```bash
+npm run lint
 npm run build
+npm run preview
 ```
-Le code optimisé se trouvera dans le dossier `/dist`.
 
 ## Crédits
-Projet développé par **Issa.dev**  
-GitHub : [Issa-Mgn](https://github.com/Issa-Mgn)  
-Powered by : [L!txx](https://litxxcompany.netlify.app/) 
 
----
-*Si vous appréciez ce projet, n'hésitez pas à laisser une étoile ⭐ sur GitHub !*
+Projet développé par Issa.dev.
+
+GitHub : [Issa-Mgn](https://github.com/Issa-Mgn)  
+Powered by : [L!txx](https://litxxcompany.netlify.app/)
